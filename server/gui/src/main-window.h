@@ -6,6 +6,7 @@
 #include <QProcess>
 #include "windows.h"
 #include "command.h"
+#include "profile.h"
 #include "streamer-server.h"
 #include "translation-aggregator-controller.h"
 #include "visual-novel-controller.h"
@@ -45,6 +46,7 @@ class MainWindow : public QMainWindow
 	private:
 		Ui::MainWindow *ui;
 		QSettings *m_settings;
+		QList<Profile*> m_profiles;
 		StreamerServer *m_server;
 		TranslationAggregatorController *m_taController;
 		QString m_lastText;

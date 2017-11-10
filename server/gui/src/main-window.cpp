@@ -5,6 +5,8 @@
 #include <QTimer>
 #include <QClipboard>
 #include <QList>
+#include <QDir>
+#include <QFileIconProvider>
 #include "logger.h"
 #include "windows-utils.h"
 #include "options-window.h"
@@ -30,6 +32,18 @@ MainWindow::MainWindow(QWidget *parent)
 	for (const QString &size : splitSizes)
 		sizes.append(size.toInt());
 	ui->splitterLogVN->setSizes(sizes);
+
+	LOG("Loading profiles", Logger::Info);
+	QDir profilesDir("profiles/");
+	QStringList profiles = profilesDir.entryList(QStringList() << "*.ini", QDir::Files);
+	for (const QString &file : profiles)
+	{
+		Profile *profile = new Profile(new QSettings(profilesDir.absoluteFilePath(file), QSettings::IniFormat, this));
+		m_profiles.append(profile);
+
+		QIcon icon = QFileIconProvider().icon(QFileInfo(profile->path()));
+		ui->comboProfile->addItem(icon, profile->name());
+	}
 
 	m_server = new StreamerServer(m_settings->value("port", 46421).toInt(), this);
 	connect(m_server, &StreamerServer::commandReceived, this, &MainWindow::commandReceived);
