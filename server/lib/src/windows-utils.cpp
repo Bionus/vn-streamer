@@ -1,4 +1,6 @@
 #include "windows-utils.h"
+#include "psapi.h"
+#include <QDebug>
 
 
 BOOL CALLBACK enumWindow(HWND hwnd, LPARAM lParam)
@@ -18,6 +20,20 @@ QMap<QString, HWND> getAllWindows()
 	QMap<QString, HWND> ret;
 	EnumWindows(enumWindow, reinterpret_cast<LPARAM>(&ret));
 	return ret;
+}
+
+QString getWindowExecutable(HWND window)
+{
+	DWORD processId;
+	GetWindowThreadProcessId(window, &processId);
+	HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+
+	const DWORD BUFFER_SIZE = 1024;
+	wchar_t *ch = new wchar_t[BUFFER_SIZE];
+	GetModuleFileNameExW(process, NULL, ch, BUFFER_SIZE);
+
+	return QString::fromWCharArray(ch);
+
 }
 
 HWND getWindow(QString name)

@@ -8,6 +8,7 @@
 
 
 QMap<QString, HWND> getAllWindows();
+QString getWindowExecutable(HWND window);
 HWND getWindow(QString name);
 QRect windowRect(HWND window);
 QString windowTitle(HWND window);
