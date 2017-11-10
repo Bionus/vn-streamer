@@ -175,7 +175,9 @@ void MainWindow::start()
 {
 	// Start image poller
 	HWND window = m_windows[ui->comboApplication->currentText()];
-	m_vnController = new VisualNovelController(window, m_settings);
+	int profileIndex = ui->comboProfile->currentIndex();
+	Profile *profile = profileIndex > 0 ? m_profiles[profileIndex - 1] : Q_NULLPTR;
+	m_vnController = new VisualNovelController(new WindowController(window), m_settings, profile);
 	ui->labelImage->setPixmap(m_vnController->getImage().scaled(QSize(200, 150), Qt::KeepAspectRatio));
 
 	// Stop polling

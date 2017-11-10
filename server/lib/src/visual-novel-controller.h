@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QPixmap>
 #include <QSettings>
-#include "windows.h"
+#include "window-controller.h"
+#include "profile.h"
 
 
 class VisualNovelController : public QObject
@@ -12,19 +13,18 @@ class VisualNovelController : public QObject
 	Q_OBJECT
 
 	public:
-		explicit VisualNovelController(HWND window, QSettings *settings, QObject *parent = Q_NULLPTR);
+		explicit VisualNovelController(WindowController *window, QSettings *settings, Profile *profile = Q_NULLPTR, QObject *parent = Q_NULLPTR);
 		QPixmap getImage();
 
 	public slots:
 		void next();
-		void toggleTextBox();
-
-	protected:
-		void click(QPoint pos, bool right = false);
+		void hideTextbox();
+		void showTextbox();
 
 	private:
-		HWND m_window;
+		WindowController *m_window;
 		QSettings *m_settings;
+		Profile *m_profile;
 };
 
 #endif // VISUAL_NOVEL_CONTROLLER_H
