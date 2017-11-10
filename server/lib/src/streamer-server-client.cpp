@@ -14,10 +14,14 @@ StreamerServerClient::StreamerServerClient(QWebSocket *socket)
 
 QString StreamerServerClient::toString() const
 {
-	return QString("'%1' (%2:%3)")
-			.arg(m_socket->peerName())
-			.arg(m_socket->peerAddress().toString())
-			.arg(m_socket->peerPort());
+	QString ip = QString("%1:%2")
+				 .arg(m_socket->peerAddress().toString())
+				 .arg(m_socket->peerPort());
+
+	if (m_socket->peerName().isEmpty())
+		return ip;
+
+	return QString("'%1' (%2)").arg(m_socket->peerName()).arg(ip);
 }
 
 void StreamerServerClient::sendText(const QString &text, const QString &name)
@@ -70,7 +74,6 @@ void StreamerServerClient::textMessageReceived(QString message)
 			return;
 		}
 		m_size = QSize(args[0].toInt(), args[1].toInt());
-		return;
 	}
 
 	LOG(QString("Message received: type %1, args '%2'").arg(QString::number(action)).arg(args.join("', '")), Logger::Debug);

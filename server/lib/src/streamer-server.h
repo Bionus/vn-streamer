@@ -24,9 +24,10 @@ class StreamerServer : public QObject
 	protected slots:
 		void newConnection();
 		void clientDisconnected();
+		void clientCommandReceived(Command command, QStringList args);
 
 	signals:
-		void commandReceived(Command command, QStringList args);
+		void commandReceived(QString client, Command command, QStringList args);
 
 	private:
 		int m_port;

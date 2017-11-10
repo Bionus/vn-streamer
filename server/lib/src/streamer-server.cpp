@@ -42,7 +42,7 @@ void StreamerServer::newConnection()
 	auto client = new StreamerServerClient(socket);
 
 	connect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
-	connect(client, SIGNAL(commandReceived(Command, QStringList)), this, SIGNAL(commandReceived(Command, QStringList)));
+	connect(client, SIGNAL(commandReceived(Command, QStringList)), this, SLOT(clientCommandReceived(Command, QStringList)));
 
 	m_clients.append(client);
 
@@ -59,4 +59,13 @@ void StreamerServer::clientDisconnected()
 
 	client->deleteLater();
 	m_clients.removeAll(client);
+}
+
+void StreamerServer::clientCommandReceived(Command command, QStringList args)
+{
+	StreamerServerClient *client = qobject_cast<StreamerServerClient*>(sender());
+	if (!client)
+		return;
+
+	emit commandReceived(client->toString(), command, args);
 }

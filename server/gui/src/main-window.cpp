@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// Splitter sizes
 	QList<int> sizes;
-	QStringList splitSizes = m_settings->value("Splitter/LogVN", "300,100").toString().split(',');
+	QStringList splitSizes = m_settings->value("Splitter/LogVN", "300,200,100").toString().split(',');
 	for (const QString &size : splitSizes)
 		sizes.append(size.toInt());
 	ui->splitterLogVN->setSizes(sizes);
@@ -126,8 +126,14 @@ void MainWindow::newLog(QString message)
 	ui->textEditLog->append(message + "<br/>");
 }
 
-void MainWindow::commandReceived(Command command, QStringList args)
+void MainWindow::commandReceived(QString client, Command command, QStringList args)
 {
+	static QStringList commands = QStringList() << "Setup" << "Next" << "Close" << "CloseAll";
+
+	QString cmd = commands[command];
+	QString message = !args.isEmpty() ? QString("%2 (%3)").arg(cmd).arg(args.join(", ")) : cmd;
+	ui->textEditCommands->append(QString("[%1] %2<br/>").arg(client).arg(message));
+
 	if (command == Command::Next)
 	{
 		m_vnController->next();

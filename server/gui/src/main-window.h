@@ -29,7 +29,7 @@ class MainWindow : public QMainWindow
 		void pollWindows();
 		void dataChanged();
 		void newLog(QString message);
-		void commandReceived(Command command, QStringList args);
+		void commandReceived(QString client, Command command, QStringList args);
 
 		// Server controls
 		void toggle();
