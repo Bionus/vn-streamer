@@ -91,22 +91,46 @@ void WindowController::click(Qt::MouseButton button, QPoint pos)
 	LOG(QString("Click (%1, %2, %3)").arg(button == Qt::RightButton ? "right" : "left").arg(pos.x()).arg(pos.y()), Logger::Debug);
 }
 
-bool IsVKExtended(UINT key)
+bool isVKExtended(UINT key)
 {
 	return (key == VK_INSERT || key == VK_DELETE || key == VK_END || key == VK_DOWN ||
 		key == VK_NEXT || key == VK_LEFT || key == VK_RIGHT || key == VK_HOME || key == VK_UP ||
 		key == VK_LWIN || key == VK_RWIN || key == VK_RMENU || key == VK_RCONTROL);
 }
 
+UINT keyToVK(Qt::Key key)
+{
+	// 0-9
+	if (key >= Qt::Key_0 && key <= Qt::Key_9)
+		return 0x30 + (key - Qt::Key_0); // VK_KEY_0
+
+	// a-z
+	if (key >= Qt::Key_A && key <= Qt::Key_Z)
+		return 0x41 + (key - Qt::Key_A); // VK_KEY_A
+
+	// Function keys
+	if (key >= Qt::Key_F1 && key <= Qt::Key_F24)
+		return 0x70 + (key - Qt::Key_F1); // VK_F1
+
+	// Mapping for special keys
+	static QMap<Qt::Key, UINT> keys = {
+		{ Qt::Key_Enter, VK_RETURN },
+		{ Qt::Key_Escape, VK_ESCAPE },
+		{ Qt::Key_Space, VK_SPACE },
+	};
+
+	return keys.value(key, VK_ESCAPE);
+}
+
 void WindowController::keyPress(Qt::Key key)
 {
-	UINT vk = VK_ESCAPE;
+	UINT vk = keyToVK(key);
 
 	bool simulate = false;
 	if (simulate)
 	{
 		UINT scan = MapVirtualKey(vk, 0);
-		bool extended = IsVKExtended(vk);
+		bool extended = isVKExtended(vk);
 		LPARAM lparam;
 
 		// Key down
