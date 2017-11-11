@@ -14,8 +14,27 @@ The server only works on Windows at the moment, due to the heavy usage of the Wi
 
 As for the client, the HTML5 one uses WebSockets and can therefore work on any browser that supports them, on desktop or mobile.
 
-## Download
+### Download
 You can download the latest release [here](https://github.com/Bionus/vn-streamer/releases/latest), or find all previous releases [here](https://github.com/Bionus/vn-streamer/releases).
 
-## Languages
+### Languages
 * English
+
+## How to use
+
+### Server
+1. Run the visual novel on your computer
+2. Run a text hooker that outputs the text in your clipboard
+3. If you want machine translations, run Translation Aggregator (optional)
+4. Create a profile for your visual novel (optional, recommended)
+5. Run the server
+6. Select your visual novel in the "Application" combobox
+7. Select the text source you want to use in the "Text source" combobox
+8. Click the "Start" button
+
+_**Note:** you may need to open the server port in your router in order to be able to access the server from outside your local network. To do so, simply redirect the TCP port 46421 (by default) to your computer._
+
+### HTML5 client
+1. Open the client in your favorite browser
+2. Type your server's IP and port
+3. Click the "Connect" button
