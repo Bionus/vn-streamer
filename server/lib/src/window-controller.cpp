@@ -30,7 +30,9 @@ void WindowController::click(Qt::MouseButton button, QPoint pos)
 	}
 
 	QRect rect = windowRect(m_window);
-	QPoint screenCoords(rect.left() + pos.x(), rect.top() + pos.y());
+	int x = pos.x() < 0 ? rect.right() + pos.x() : rect.left() + pos.x();
+	int y = pos.y() < 0 ? rect.bottom() + pos.y() : rect.top() + pos.y();
+	QPoint screenCoords(x, y);
 	SetForegroundWindow(m_window);
 
 	bool simulate = false;
