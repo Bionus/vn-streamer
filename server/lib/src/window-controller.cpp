@@ -12,11 +12,7 @@ WindowController::WindowController(HWND window)
 
 QPixmap WindowController::screenshot()
 {
-	QRect rect = windowRect(m_window);
-	SetForegroundWindow(m_window);
-
-	WId desktop = QApplication::desktop()->winId();
-	return QPixmap::grabWindow(desktop, rect.x(), rect.y(), rect.width(), rect.height());
+	return windowScreenshot(m_window);
 }
 
 QRect WindowController::rect()

@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QString>
 #include <QRect>
+#include <QPixmap>
 
 
 QMap<QString, HWND> getAllWindows();
@@ -13,5 +14,6 @@ HWND getWindow(QString name);
 QRect windowRect(HWND window);
 QString windowTitle(HWND window);
 QString windowText(HWND window);
+QPixmap windowScreenshot(HWND window);
 
 #endif // WINDOWS_UTILS_H

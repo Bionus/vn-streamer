@@ -1,6 +1,6 @@
 #include "windows-utils.h"
+#include <QtWinExtras/QtWin>
 #include "psapi.h"
-#include <QDebug>
 
 
 BOOL CALLBACK enumWindow(HWND hwnd, LPARAM lParam)
@@ -33,7 +33,6 @@ QString getWindowExecutable(HWND window)
 	GetModuleFileNameExW(process, NULL, ch, BUFFER_SIZE);
 
 	return QString::fromWCharArray(ch);
-
 }
 
 HWND getWindow(QString name)
@@ -72,4 +71,24 @@ QString windowText(HWND window)
 	wchar_t *ch = new wchar_t[BUFFER_SIZE];
 	SendMessageW(window, WM_GETTEXT, (WPARAM)BUFFER_SIZE, (LPARAM)ch);
 	return QString::fromWCharArray(ch);
+}
+
+QPixmap windowScreenshot(HWND window)
+{
+	QRect rect = windowRect(window);
+
+	HDC hdcSource = GetDC(window);
+	HDC hdcCapture = CreateCompatibleDC(hdcSource);
+
+	HBITMAP captureBitmap = CreateCompatibleBitmap(hdcSource, rect.width(), rect.height());
+	SelectObject(hdcCapture, captureBitmap);
+	BitBlt(hdcCapture, 0, 0, rect.width(), rect.height(), hdcSource, 0, 0, SRCCOPY | CAPTUREBLT);
+
+	QPixmap res = QtWin::fromHBITMAP(captureBitmap);
+
+	ReleaseDC(window, hdcSource);
+	DeleteDC(hdcCapture);
+	DeleteObject(captureBitmap);
+
+	return res;
 }
