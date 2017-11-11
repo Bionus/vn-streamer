@@ -11,7 +11,7 @@ class Profile
 		explicit Profile(QSettings *settings);
 		~Profile();
 		QString name() const;
-		QString path() const;
+		bool match(const QString &filename) const;
 		WindowCommand *command(const QString &key) const;
 
 	private:

@@ -53,6 +53,8 @@ class MainWindow : public QMainWindow
 		VisualNovelController *m_vnController;
 		int m_streaming = 0;
 		QMap<QString, HWND> m_windows;
+		QMap<HWND, Profile*> m_windowsProfiles;
+		QMap<HWND, QString> m_windowsExecutables;
 		QTimer *m_windowPoller = Q_NULLPTR;
 		QProcess *m_streamingProcess = Q_NULLPTR;
 };

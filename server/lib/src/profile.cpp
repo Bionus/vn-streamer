@@ -1,4 +1,5 @@
 #include "profile.h"
+#include <QDir>
 #include "commands/window-command-factory.h"
 
 
@@ -26,9 +27,10 @@ QString Profile::name() const
 	return m_settings->value("name").toString();
 }
 
-QString Profile::path() const
+bool Profile::match(const QString &filename) const
 {
-	return m_settings->value("path").toString();
+	QString executable = QDir::toNativeSeparators(m_settings->value("executable").toString());
+	return filename.endsWith(executable);
 }
 
 WindowCommand *Profile::command(const QString &key) const

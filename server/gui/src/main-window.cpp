@@ -38,11 +38,10 @@ MainWindow::MainWindow(QWidget *parent)
 	QStringList profiles = profilesDir.entryList(QStringList() << "*.ini", QDir::Files);
 	for (const QString &file : profiles)
 	{
-		Profile *profile = new Profile(new QSettings(profilesDir.absoluteFilePath(file), QSettings::IniFormat, this));
+		QSettings *profileSettings = new QSettings(profilesDir.absoluteFilePath(file), QSettings::IniFormat, this);
+		profileSettings->setIniCodec("UTF-8");
+		Profile *profile = new Profile(profileSettings);
 		m_profiles.append(profile);
-
-		QIcon icon = QFileIconProvider().icon(QFileInfo(profile->path()));
-		ui->comboProfile->addItem(icon, profile->name());
 	}
 
 	m_server = new StreamerServer(m_settings->value("port", 46421).toInt(), this);
@@ -160,7 +159,37 @@ void MainWindow::pollWindows()
 
 	QString current = ui->comboApplication->currentText();
 	ui->comboApplication->clear();
-	ui->comboApplication->addItems(m_windows.keys());
+
+	for (const QString &title : m_windows.keys())
+	{
+		HWND window = m_windows[title];
+		if (!m_windowsProfiles.contains(window))
+		{
+			QString exe = getWindowExecutable(window);
+			m_windowsExecutables.insert(window, exe);
+
+			for (Profile *profile : m_profiles)
+			{
+				if (profile->match(exe))
+				{
+					m_windowsProfiles.insert(window, profile);
+					break;
+				}
+			}
+		}
+
+		if (m_windowsProfiles.contains(window))
+		{
+			QString exe = m_windowsExecutables[window];
+			QIcon icon = QFileIconProvider().icon(QFileInfo(exe));
+			ui->comboApplication->addItem(icon, title);
+		}
+		else
+		{
+			ui->comboApplication->addItem(title);
+		}
+	}
+
 	ui->comboApplication->setCurrentText(current);
 }
 
@@ -175,8 +204,7 @@ void MainWindow::start()
 {
 	// Start image poller
 	HWND window = m_windows[ui->comboApplication->currentText()];
-	int profileIndex = ui->comboProfile->currentIndex();
-	Profile *profile = profileIndex > 0 ? m_profiles[profileIndex - 1] : Q_NULLPTR;
+	Profile *profile = m_windowsProfiles.value(window, Q_NULLPTR);
 	m_vnController = new VisualNovelController(new WindowController(window), m_settings, profile);
 	ui->labelImage->setPixmap(m_vnController->getImage().scaled(QSize(200, 150), Qt::KeepAspectRatio));
 
