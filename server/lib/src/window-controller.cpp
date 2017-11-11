@@ -4,6 +4,7 @@
 #include <QDesktopWidget>
 #include "logger.h"
 #include "windows-utils.h"
+#include "windows.h"
 
 
 WindowController::WindowController(HWND window)
@@ -88,4 +89,65 @@ void WindowController::click(Qt::MouseButton button, QPoint pos)
 	}
 
 	LOG(QString("Click (%1, %3, %4)").arg(button == Qt::RightButton ? "right" : "left").arg(pos.x()).arg(pos.y()), Logger::Debug);
+}
+
+bool IsVKExtended(UINT key)
+{
+	return (key == VK_INSERT || key == VK_DELETE || key == VK_END || key == VK_DOWN ||
+		key == VK_NEXT || key == VK_LEFT || key == VK_RIGHT || key == VK_HOME || key == VK_UP ||
+		key == VK_LWIN || key == VK_RWIN || key == VK_RMENU || key == VK_RCONTROL);
+}
+
+void WindowController::keyPress(Qt::Key key)
+{
+	UINT vk = VK_ESCAPE;
+
+	bool simulate = false;
+	if (simulate)
+	{
+		UINT scan = MapVirtualKey(vk, 0);
+		bool extended = IsVKExtended(vk);
+		LPARAM lparam;
+
+		// Key down
+		lparam = 0x00000001 | (LPARAM)(scan << 16);
+		if (extended)
+			lparam = lparam | 0x01000000;
+		SendMessage(m_window, WM_KEYDOWN, vk, lparam);
+
+		// Char
+		SendMessage(m_window, WM_CHAR, vk, 0);
+
+		// Key up
+		lparam = 0xC0000001 | (LPARAM)(scan << 16);
+		if (extended)
+			lparam = lparam | 0x01000000;
+		SendMessage(m_window, WM_KEYUP, vk, lparam);
+	}
+	else
+	{
+		SetForegroundWindow(m_window);
+
+		INPUT input;
+
+		input.type = INPUT_KEYBOARD;
+		input.ki.time = 0;
+		input.ki.wVk = 0; //We're doing scan codes instead
+		input.ki.dwExtraInfo = 0;
+
+		// This let's you do a hardware scan instead of a virtual keypress
+		input.ki.dwFlags = KEYEVENTF_SCANCODE;
+		input.ki.wScan = MapVirtualKey(vk, 0); // 0x1E;  //Set a unicode character to use (A)
+
+		// Key down
+		SendInput(1, &input, sizeof(INPUT));
+
+		QThread::msleep(100);
+
+		// Key up
+		input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+		SendInput(1, &input, sizeof(INPUT));
+	}
+
+	LOG(QString("Key press (%1)").arg(key), Logger::Debug);
 }

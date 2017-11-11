@@ -4,6 +4,7 @@
 #include "composite-window-command.h"
 #include "sleep-window-command.h"
 #include "mouse-window-command.h"
+#include "keyboard-window-command.h"
 
 
 WindowCommand *WindowCommandFactory::create(const QString &text)
@@ -43,8 +44,20 @@ WindowCommand *WindowCommandFactory::makeSingle(const QString &command)
 	// Keyboard commands
 	if (type == "key")
 	{
-		// TODO
-		return Q_NULLPTR;
+		static QMap<QString, Qt::Key> keys = {
+			{ "enter", Qt::Key_Enter },
+			{ "escape", Qt::Key_Escape },
+			{ "space", Qt::Key_Space },
+		};
+
+		if (!keys.contains(data[0]))
+		{
+			LOG(QString("Invalid key '%1'").arg(data[0]), Logger::Error);
+			return Q_NULLPTR;
+		}
+
+		Qt::Key key = keys[data[0]];
+		return new KeyboardWindowCommand(key);
 	}
 
 	// Mouse commands

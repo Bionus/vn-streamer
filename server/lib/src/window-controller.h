@@ -18,6 +18,7 @@ class WindowController : public QObject
 
 	public slots:
 		void click(Qt::MouseButton button, QPoint pos);
+		void keyPress(Qt::Key key);
 
 	private:
 		HWND m_window;
