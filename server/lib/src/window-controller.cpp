@@ -153,15 +153,12 @@ void WindowController::keyPress(Qt::Key key)
 		SetForegroundWindow(m_window);
 
 		INPUT input;
+		memset(&input, 0, sizeof(INPUT));
 
 		input.type = INPUT_KEYBOARD;
-		input.ki.time = 0;
-		input.ki.wVk = 0; //We're doing scan codes instead
-		input.ki.dwExtraInfo = 0;
-
-		// This let's you do a hardware scan instead of a virtual keypress
+		input.ki.wVk = vk;
 		input.ki.dwFlags = KEYEVENTF_SCANCODE;
-		input.ki.wScan = MapVirtualKey(vk, 0); // 0x1E;  //Set a unicode character to use (A)
+		input.ki.wScan = MapVirtualKey(vk, 0);
 
 		// Key down
 		SendInput(1, &input, sizeof(INPUT));
