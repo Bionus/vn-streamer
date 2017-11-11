@@ -143,7 +143,7 @@ void MainWindow::newLog(QString message)
 
 void MainWindow::commandReceived(QString client, Command command, QStringList args)
 {
-	static QStringList commands = QStringList() << "Setup" << "Next" << "Close" << "CloseAll";
+	static QStringList commands = QStringList() << "Setup" << "Next" << "QuickSave" << "QuickLoad";
 
 	QString cmd = commands[command];
 	QString message = !args.isEmpty() ? QString("%2 (%3)").arg(cmd).arg(args.join(", ")) : cmd;
@@ -153,6 +153,14 @@ void MainWindow::commandReceived(QString client, Command command, QStringList ar
 	if (command == Command::Next)
 	{
 		m_vnController->next();
+	}
+	else if (command == Command::QuickSave)
+	{
+		m_vnController->quickSave();
+	}
+	else if (command == Command::QuickLoad)
+	{
+		m_vnController->quickLoad();
 	}
 }
 

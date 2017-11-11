@@ -20,6 +20,8 @@ class VisualNovelController : public QObject
 		void next();
 		void hideTextbox();
 		void showTextbox();
+		void quickSave();
+		void quickLoad();
 
 	protected:
 		void executeCommand(QString command);

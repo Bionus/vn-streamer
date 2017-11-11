@@ -55,3 +55,19 @@ void VisualNovelController::showTextbox()
 	else
 		m_window->click(Qt::RightButton, QPoint(100, 100));
 }
+
+void VisualNovelController::quickSave()
+{
+	if (m_profile != Q_NULLPTR)
+		executeCommand("quick_save");
+	else
+		LOG(QString("Cannot quick save without a profile"), Logger::Warning);
+}
+
+void VisualNovelController::quickLoad()
+{
+	if (m_profile != Q_NULLPTR)
+		executeCommand("quick_load");
+	else
+		LOG(QString("Cannot quick load without a profile"), Logger::Warning);
+}

@@ -6,8 +6,8 @@ enum Command
 {
 	Setup = 0,
 	Next = 1,
-	Close = 2,
-	CloseAll = 3,
+	QuickSave = 2,
+	QuickLoad = 3,
 };
 
 #endif // COMMAND_H

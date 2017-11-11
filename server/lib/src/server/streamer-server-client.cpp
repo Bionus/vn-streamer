@@ -14,8 +14,8 @@ void StreamerServerClient::textMessageReceived(QString message)
 		static QMap<QString, Command> actions = {
 			{ "setup", Command::Setup },
 			{ "next", Command::Next },
-			{ "close", Command::Close },
-			{ "close_all", Command::CloseAll },
+			{ "quick_save", Command::QuickSave },
+			{ "quick_load", Command::QuickLoad },
 		};
 
 		if (!actions.contains(command))
@@ -26,7 +26,7 @@ void StreamerServerClient::textMessageReceived(QString message)
 		action = actions[command];
 	}
 
-	if (action < 0 || action > Command::CloseAll)
+	if (action < 0 || action > Command::QuickLoad)
 	{
 		LOG(QString("Unknown message received: '%1'").arg(message), Logger::Warning);
 		return;

@@ -42,7 +42,7 @@ function connect(ip) {
 	var connection = new WebSocket('ws://' + ip);
 	connection.onopen = function() {
 		status.innerHTML = 'Connected';
-		connection.send('0 0 0');
+		connection.send('setup 0 0');
 	};
 	connection.onclose = function() {
 		status.innerHTML = 'Closed';
@@ -68,7 +68,13 @@ function connect(ip) {
 	};
 
 	document.getElementById('control-next').onclick = function() {
-		connection.send('1');
+		connection.send('next');
+	};
+	document.getElementById('control-quick-save').onclick = function() {
+		connection.send('quick_save');
+	};
+	document.getElementById('control-quick-load').onclick = function() {
+		connection.send('quick_load');
 	};
 };
 
