@@ -1,0 +1,67 @@
+version: '{build}'
+
+environment:
+  APPVEYOR: 1
+  DEPLOY: 0
+
+  matrix:
+    # MSVC x86
+    - PLATFORM: amd64_x86
+      QTDIR: C:\Qt\5.7\msvc2015
+      MAKE: nmake
+      MAKEFILES: NMake Makefiles
+      DEPLOY: 1
+
+init:
+  - git config --global core.autocrlf input
+  - set PATH=%QTDIR%\bin;%PATH%
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
+
+build_script:
+  - cd server
+  - mkdir build
+  - cd build
+  - cmake .. -G "%MAKEFILES%" -DCMAKE_BUILD_TYPE=Release
+  - nmake
+  - cd ..
+  - cd ..
+  - mkdir dist
+  - mkdir "dist\server"
+  - copy "README.md" "dist"
+  - copy "LICENSE" "dist"
+  - copy "NOTICE" "dist"
+  - xcopy "server\dist" "dist\server" /S
+  - copy "server\build\gui\VN Streamer.exe" "dist\server"
+  - copy "%QTDIR%\bin\Qt5Core.dll" "dist\server"
+  - copy "%QTDIR%\bin\Qt5Gui.dll" "dist\server"
+  - copy "%QTDIR%\bin\Qt5Network.dll" "dist\server"
+  - copy "%QTDIR%\bin\Qt5WebSockets.dll" "dist\server"
+  - copy "%QTDIR%\bin\Qt5Widgets.dll" "dist\server"
+  - copy "%QTDIR%\bin\Qt5WinExtras.dll" "dist\server"
+  - mkdir "dist\client"
+  - xcopy "client\html5" "dist\client" /S
+
+artifacts:
+- path: dist\
+  name: vn-streamer
+  type: zip
+
+deploy:
+  - provider: GitHub
+    tag: nightly
+    release: Nightly
+    draft: false
+    prerelease: true
+    force_update: true
+    artifact: vn-streamer
+    description: |
+      Nightly automated builds from the master branch.
+      Automatically uploaded by AppVeyor, **use at your own risk**!
+
+      **Head:** $(APPVEYOR_REPO_COMMIT)
+      **Date:** $(APPVEYOR_REPO_COMMIT_TIMESTAMP)
+    auth_token:
+      secure: mUYQ72KBJUaYr5Bhy2HkBkEY13Q7k27Q7IRmOGXfTOq7YnXUS9PikETcZvzCfiVu
+    on:
+      branch: master
+      DEPLOY: 1
