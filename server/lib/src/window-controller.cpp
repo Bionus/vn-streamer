@@ -162,12 +162,12 @@ void WindowController::keyPress(Qt::Key key)
 
 		// Key down
 		SendInput(1, &input, sizeof(INPUT));
-
 		QThread::msleep(100);
 
 		// Key up
 		input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
 		SendInput(1, &input, sizeof(INPUT));
+		QThread::msleep(100);
 	}
 
 	LOG(QString("Key press (%1)").arg(key), Logger::Debug);
