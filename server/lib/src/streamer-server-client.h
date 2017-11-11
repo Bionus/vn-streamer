@@ -12,12 +12,11 @@ class StreamerServerClient : public QObject
 	Q_OBJECT
 
 	public:
-		explicit StreamerServerClient(QWebSocket *socket);
-		QString toString() const;
+		virtual QString toString() const = 0;
 
 	public slots:
-		void sendText(const QString &text, const QString &name = QString());
-		void sendImage(const QPixmap &image);
+		virtual void sendText(const QString &text, const QString &name = QString()) = 0;
+		virtual void sendImage(const QPixmap &image) = 0;
 
 	protected slots:
 		void textMessageReceived(QString message);
@@ -26,8 +25,7 @@ class StreamerServerClient : public QObject
 		void disconnected();
 		void commandReceived(Command command, QStringList args);
 
-	private:
-		QWebSocket *m_socket;
+	protected:
 		QSize m_size;
 };
 

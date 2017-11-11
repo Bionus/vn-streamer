@@ -1,6 +1,7 @@
 #include "streamer-server.h"
 #include <QBuffer>
 #include "logger.h"
+#include "streamer-server-websocket-client.h"
 
 
 StreamerServer::StreamerServer(int port, QObject *parent)
@@ -39,7 +40,7 @@ void StreamerServer::sendImage(const QPixmap &image)
 void StreamerServer::newConnection()
 {
 	QWebSocket *socket = m_server->nextPendingConnection();
-	auto client = new StreamerServerClient(socket);
+	auto client = new StreamerServerWebsocketClient(socket);
 
 	connect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
 	connect(client, SIGNAL(commandReceived(Command, QStringList)), this, SLOT(clientCommandReceived(Command, QStringList)));
