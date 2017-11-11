@@ -8,8 +8,14 @@
 	</head>
 	<body>
 		<div id="wrapper">
-			<div id="connection-status">
-				<p>Status: <span id="connection-status-text"></span></p>
+			<div id="connect-area">
+				<form id="connect-form">
+					<input type="text" value="localhost:46421" name="ip" id="ip" />
+					<input type="submit" value="Connect" />
+				</form>
+				<div id="connection-status">
+					<p>Status: <span id="connection-status-text"></span></p>
+				</div>
 			</div>
 			<div id="vn-container">
 				<div id="image-container">

@@ -21,9 +21,16 @@ body {
 	padding: 20px;
 }
 
-#connection-status {
+#connect-area {
+	position: relative;
 	margin-bottom: 15px;
+}
+
+#connection-status {
 	font-size: 0.8em;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 #image-container {
@@ -45,9 +52,15 @@ body {
 	margin-bottom: 15px;
 }
 
-button {
+input[type="text"], input[type="password"] {
+	padding: 3px 8px;
+	background-color: #ccc;
+	border: none;
+	border-radius: 5px;
+}
+
+button, input[type="submit"] {
 	padding: 3px 12px;
-	margin-right: 5px;
 	background-color: #fff;
 	border: none;
 	border-radius: 5px;
@@ -60,10 +73,15 @@ button {
 		padding: 0;
 	}
 
-	#connection-status {
+	#connect-area {
 		position: absolute;
 		top: 10px;
 		right: 10px;
+	}
+	#connection-status {
+		position: relative;
+		margin-top: 10px;
+		text-align: right;
 	}
 
 	#vn-container {
@@ -117,8 +135,8 @@ button {
 		padding: 0;
 	}
 
-	#connection-status {
-		padding: 15px 15px 0 15px;
+	#connect-area {
+		margin: 15px;
 	}
 
 	#vn-container {
