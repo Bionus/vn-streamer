@@ -88,7 +88,7 @@ void WindowController::click(Qt::MouseButton button, QPoint pos)
 		SendInput(1, &input, sizeof(INPUT));
 	}
 
-	LOG(QString("Click (%1, %3, %4)").arg(button == Qt::RightButton ? "right" : "left").arg(pos.x()).arg(pos.y()), Logger::Debug);
+	LOG(QString("Click (%1, %2, %3)").arg(button == Qt::RightButton ? "right" : "left").arg(pos.x()).arg(pos.y()), Logger::Debug);
 }
 
 bool IsVKExtended(UINT key)
