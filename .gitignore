@@ -1,3 +1,8 @@
+# Specific
+
+**/dist/settings.ini
+**/dist/*.log
+
 # General
 
 /bin/
