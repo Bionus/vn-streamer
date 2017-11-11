@@ -9,7 +9,7 @@ class StreamerServerFakeClient : public StreamerServerClient
 	Q_OBJECT
 
 	public:
-		explicit StreamerServerFakeClient(const QString &name);
+		explicit StreamerServerFakeClient(const QString &name = "");
 		virtual QString toString() const override;
 		void sendCommand(const QString &message);
 

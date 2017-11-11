@@ -8,6 +8,7 @@
 #include "command.h"
 #include "profile.h"
 #include "server/streamer-server.h"
+#include "server/streamer-server-fake-client.h"
 #include "translation-aggregator-controller.h"
 #include "visual-novel-controller.h"
 
@@ -31,6 +32,7 @@ class MainWindow : public QMainWindow
 		void dataChanged();
 		void newLog(QString message);
 		void commandReceived(QString client, Command command, QStringList args);
+		void sendCommand();
 
 		// Server controls
 		void toggle();
@@ -48,6 +50,7 @@ class MainWindow : public QMainWindow
 		QSettings *m_settings;
 		QList<Profile*> m_profiles;
 		StreamerServer *m_server;
+		StreamerServerFakeClient *m_serverFakeClient;
 		TranslationAggregatorController *m_taController;
 		QString m_lastText;
 		VisualNovelController *m_vnController;

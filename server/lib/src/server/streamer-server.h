@@ -14,6 +14,7 @@ class StreamerServer : public QObject
 
 	public:
 		explicit StreamerServer(int port, QObject *parent = Q_NULLPTR);
+		void addClient(StreamerServerClient *client);
 
 	public slots:
 		void start();

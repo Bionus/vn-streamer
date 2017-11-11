@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
 	}
 
 	m_server = new StreamerServer(m_settings->value("port", 46421).toInt(), this);
+	m_serverFakeClient = new StreamerServerFakeClient();
+	m_server->addClient(m_serverFakeClient);
 	connect(m_server, &StreamerServer::commandReceived, this, &MainWindow::commandReceived);
 
 	LOG("Looking for Translation Aggregator", Logger::Info);
@@ -145,12 +147,18 @@ void MainWindow::commandReceived(QString client, Command command, QStringList ar
 
 	QString cmd = commands[command];
 	QString message = !args.isEmpty() ? QString("%2 (%3)").arg(cmd).arg(args.join(", ")) : cmd;
-	ui->textEditCommands->append(QString("[%1] %2<br/>").arg(client).arg(message));
+	QString withClient = !client.isEmpty() ? QString("[%1] %2").arg(client).arg(message) : message;
+	ui->textEditCommands->append(withClient + "<br/>");
 
 	if (command == Command::Next)
 	{
 		m_vnController->next();
 	}
+}
+
+void MainWindow::sendCommand()
+{
+	m_serverFakeClient->sendCommand(ui->lineSendCommand->text());
 }
 
 void MainWindow::pollWindows()

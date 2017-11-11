@@ -11,6 +11,14 @@ StreamerServer::StreamerServer(int port, QObject *parent)
 	connect(m_server, &QWebSocketServer::newConnection, this, &StreamerServer::newConnection);
 }
 
+void StreamerServer::addClient(StreamerServerClient *client)
+{
+	connect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
+	connect(client, SIGNAL(commandReceived(Command, QStringList)), this, SLOT(clientCommandReceived(Command, QStringList)));
+
+	m_clients.append(client);
+}
+
 void StreamerServer::start()
 {
 	LOG("Starting server", Logger::Info);
@@ -42,10 +50,7 @@ void StreamerServer::newConnection()
 	QWebSocket *socket = m_server->nextPendingConnection();
 	auto client = new StreamerServerWebsocketClient(socket);
 
-	connect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
-	connect(client, SIGNAL(commandReceived(Command, QStringList)), this, SLOT(clientCommandReceived(Command, QStringList)));
-
-	m_clients.append(client);
+	addClient(client);
 
 	LOG(QString("New client %1").arg(client->toString()), Logger::Info);
 }

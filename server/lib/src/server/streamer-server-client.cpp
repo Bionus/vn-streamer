@@ -6,7 +6,25 @@ void StreamerServerClient::textMessageReceived(QString message)
 {
 	QStringList args = message.split(' ');
 	QString command = args.takeFirst();
-	Command action = (Command)command.toInt();
+
+	bool ok;
+	Command action = (Command)command.toInt(&ok);
+	if (!ok)
+	{
+		static QMap<QString, Command> actions = {
+			{ "setup", Command::Setup },
+			{ "next", Command::Next },
+			{ "close", Command::Close },
+			{ "close_all", Command::CloseAll },
+		};
+
+		if (!actions.contains(command))
+		{
+			LOG(QString("Invalid command action '%1'").arg(command), Logger::Warning);
+			return;
+		}
+		action = actions[command];
+	}
 
 	if (action < 0 || action > Command::CloseAll)
 	{
