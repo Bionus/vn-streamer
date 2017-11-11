@@ -21,6 +21,9 @@ class VisualNovelController : public QObject
 		void hideTextbox();
 		void showTextbox();
 
+	protected:
+		void executeCommand(QString command);
+
 	private:
 		WindowController *m_window;
 		QSettings *m_settings;

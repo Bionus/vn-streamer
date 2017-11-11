@@ -1,4 +1,5 @@
 #include "visual-novel-controller.h"
+#include "logger.h"
 
 
 VisualNovelController::VisualNovelController(WindowController *window, QSettings *settings, Profile *profile, QObject *parent)
@@ -19,10 +20,22 @@ QPixmap VisualNovelController::getImage()
 	return pixmap;
 }
 
+void VisualNovelController::executeCommand(QString name)
+{
+	WindowCommand *command = m_profile->command(name);
+	if (command == Q_NULLPTR)
+	{
+		LOG(QString("Undefined command '%1'").arg(name), Logger::Error);
+		return;
+	}
+
+	command->execute(m_window);
+}
+
 void VisualNovelController::next()
 {
 	if (m_profile != Q_NULLPTR)
-		m_profile->command("next")->execute(m_window);
+		executeCommand("next");
 	else
 		m_window->click(Qt::LeftButton, QPoint(100, 100));
 }
@@ -30,7 +43,7 @@ void VisualNovelController::next()
 void VisualNovelController::hideTextbox()
 {
 	if (m_profile != Q_NULLPTR)
-		m_profile->command("hide_textbox")->execute(m_window);
+		executeCommand("hide_textbox");
 	else
 		m_window->click(Qt::RightButton, QPoint(100, 100));
 }
@@ -38,7 +51,7 @@ void VisualNovelController::hideTextbox()
 void VisualNovelController::showTextbox()
 {
 	if (m_profile != Q_NULLPTR)
-		m_profile->command("show_textbox")->execute(m_window);
+		executeCommand("show_textbox");
 	else
 		m_window->click(Qt::RightButton, QPoint(100, 100));
 }
