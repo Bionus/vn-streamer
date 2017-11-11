@@ -7,7 +7,7 @@
 #include "windows.h"
 #include "command.h"
 #include "profile.h"
-#include "streamer-server.h"
+#include "server/streamer-server.h"
 #include "translation-aggregator-controller.h"
 #include "visual-novel-controller.h"
 
