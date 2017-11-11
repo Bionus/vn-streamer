@@ -10,8 +10,8 @@ Profile::Profile(QSettings *settings)
 	QStringList keys = settings->childKeys();
 	for (const QString &key : keys)
 	{
-		QString value = m_settings->value(key).toString();
-		WindowCommand *command = WindowCommandFactory::create(value);
+		QStringList values = m_settings->value(key).toStringList();
+		WindowCommand *command = WindowCommandFactory::create(values);
 		m_commands.insert(key, command);
 	}
 	settings->endGroup();

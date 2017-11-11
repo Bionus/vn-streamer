@@ -7,16 +7,14 @@
 #include "keyboard-window-command.h"
 
 
-WindowCommand *WindowCommandFactory::create(const QString &text)
+WindowCommand *WindowCommandFactory::create(const QStringList &values)
 {
-	QStringList commands = text.split(",");
-
 	QList<WindowCommand*> list;
-	for (const QString &command : commands)
+	for (const QString &value : values)
 	{
-		WindowCommand *cmd = makeSingle(command);
-		if (cmd != Q_NULLPTR)
-			list.append(cmd);
+		WindowCommand *command = makeSingle(value);
+		if (command != Q_NULLPTR)
+			list.append(command);
 	}
 
 	if (list.isEmpty())

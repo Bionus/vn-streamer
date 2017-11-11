@@ -8,7 +8,7 @@
 class WindowCommandFactory
 {
 	public:
-		static WindowCommand *create(const QString &command);
+		static WindowCommand *create(const QStringList &values);
 
 	private:
 		static WindowCommand *makeSingle(const QString &command);
