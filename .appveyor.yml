@@ -31,6 +31,7 @@ build_script:
   - copy "LICENSE" "dist"
   - copy "NOTICE" "dist"
   - xcopy "server\dist" "dist\server" /S
+  - mkdir "dist\server\platforms"
   - copy "server\build\gui\VN Streamer.exe" "dist\server"
   - copy "%QTDIR%\bin\Qt5Core.dll" "dist\server"
   - copy "%QTDIR%\bin\Qt5Gui.dll" "dist\server"
@@ -38,6 +39,7 @@ build_script:
   - copy "%QTDIR%\bin\Qt5WebSockets.dll" "dist\server"
   - copy "%QTDIR%\bin\Qt5Widgets.dll" "dist\server"
   - copy "%QTDIR%\bin\Qt5WinExtras.dll" "dist\server"
+  - copy "%QTDIR%\plugins\platforms\qwindows.dll" "dist\server\platforms"
   - mkdir "dist\client"
   - xcopy "client\html5" "dist\client" /S
 
